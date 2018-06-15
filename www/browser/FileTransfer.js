@@ -247,6 +247,15 @@ FileTransfer.prototype.download = function(source, target, successCallback, erro
     var that = this;
     var xhr = transfers[this._id] = new XMLHttpRequest();
     xhr.withCredentials = withCredentials;
+
+    // Prepare form data to send to server
+    var fd = new FormData();
+    for (var prop in params) {
+        if (params.hasOwnProperty(prop)) {
+            fd.append(prop, params[prop]);
+        }
+    }
+
     var fail = errorCallback && function(code, status, response) {
         if (transfers[that._id]) {
             delete transfers[that._id];
@@ -327,7 +336,7 @@ FileTransfer.prototype.download = function(source, target, successCallback, erro
 
     xhr.responseType = "blob";
 
-    xhr.send();
+    xhr.send(fd);
 };
 
 /**
