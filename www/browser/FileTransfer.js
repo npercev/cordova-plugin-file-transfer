@@ -237,7 +237,10 @@ FileTransfer.prototype.download = function(source, target, successCallback, erro
     
     var headers = options.headers || {};
     var withCredentials = options.withCredentials || false;
-
+    
+	var params = options.params || {};
+	var httpMethod = options.httpMethod && options.httpMethod.toUpperCase() === "POST" ? "POST" : "GET";
+	
     var basicAuthHeader = getBasicAuthHeader(source);
     if (basicAuthHeader) {
         source = source.replace(getUrlCredentials(source) + '@', '');
@@ -326,7 +329,7 @@ FileTransfer.prototype.download = function(source, target, successCallback, erro
         fail(FileTransferError.ABORT_ERR, this.status, this.response);
     };
 
-    xhr.open("GET", source, true);
+    xhr.open(httpMethod, source, true);
 
     for (var header in headers) {
         if (headers.hasOwnProperty(header)) {
